@@ -221,7 +221,7 @@ class statics_admin{
 			if(empty($title)){ $this->init->notify("Ошибка! Не заполнено поле \"Название\"", "admin/new/", 3); }
 			if(empty($uniq) || !preg_match("/^\w+$/i", $uniq)){ $this->init->notify("Ошибка! Неверно заполнено поле \"Идентификатор\"", "admin/new/", 3); }
 
-			$text_bb	= $this->db->MRES($_POST['text_bb']);
+			$text_bb	= $this->db->MRES($this->db->HSC($_POST['text_bb']));
 			$text_html	= $this->bb_decode($_POST['text_bb']);
 			$text_html	= $this->db->MRES($text_html);
 			$uid		= $this->user->id();
@@ -288,7 +288,7 @@ class statics_admin{
 			if(empty($title)){ $this->init->notify("Ошибка! Не заполнено поле \"Название\"", "admin/new/", 3); }
 			if(empty($uniq) || !preg_match("/^\w+$/i", $uniq)){ $this->init->notify("Ошибка! Неверно заполнено поле \"Идентификатор\"", "admin/new/", 3); }
 
-			$text_bb	= $this->db->MRES($_POST['text_bb']);
+			$text_bb	= $this->db->MRES($this->db->HSC($_POST['text_bb']));
 			$text_html	= $this->bb_decode($_POST['text_bb']);
 			$text_html	= $this->db->MRES($text_html);
 			$uid		= $this->user->id();
