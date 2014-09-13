@@ -1,0 +1,39 @@
+.stc { border-radius: 4px; }
+.stc .alert { margin-top: 10px; margin-bottom: 0px; }
+
+.stc-bc { margin-top: 10px; }
+
+.stc-content { clear: both; }
+
+.stc-copyright { display: block; width: 54px; height: 55px; background: url("../img/copyright_icon.png") no-repeat; float: right; margin-top: 10px; }
+
+.stc-content .stc-403,
+.stc-content .stc-404 { text-align: center; margin: 10px; }
+
+.stc-content .stc-page-full { margin: 10px; }
+.stc-content .stc-page-full .title { font-family: georgia; font-size: 18px; padding: 0px 5px; color: #777; text-shadow: 1px 1px 0 #fff; }
+.stc-content .stc-page-full .block-line { border-top: 1px solid #ddd; margin: 10px 0px; }
+.stc-content .stc-page-full .text { font-size: 12px; padding: 0px 14px; }
+.stc-content .stc-page-full .foot { font-size: 10px; padding: 0px 6px; color: #999; }
+
+.stc-content .stc-admin-main .list-pages { margin: 10px 0px; }
+.stc-content .stc-admin-main .list-pages .page-none { text-align: center; margin: 10px; color: #888; }
+.stc-content .stc-admin-main .list-pages .page-line { width: 100%; border-bottom: 1px solid #ddd; }
+.stc-content .stc-admin-main .list-pages .page-line div { padding: 5px 10px; display: inline-block; }
+.stc-content .stc-admin-main .list-pages .page-line.stc-head { font-weight: bold; color: #aaa; border-bottom: 1px solid #ddd; }
+.stc-content .stc-admin-main .list-pages .page-line .stc-id { width: 10%; }
+.stc-content .stc-admin-main .list-pages .page-line .stc-title { width: 60%; }
+.stc-content .stc-admin-main .list-pages .page-line .stc-action { width: 10%; }
+.stc-content .stc-admin-main .stc-menu { text-align: right; }
+
+.stc-content .stc-settings .table { font-family: verdana; background: #fff; }
+.stc-content .stc-settings .table .name { font-weight: bold; color: #555; width: 60%; }
+.stc-content .stc-settings .table .desc { font-weight: normal; color: #999; font-size: 11px; }
+.stc-content .stc-settings .table .submits { text-align: right; }
+
+.stc-content .stc-change .table { font-family: verdana; background: #fff; }
+.stc-content .stc-change .table .name { font-weight: bold; color: #555; width: 60%; }
+.stc-content .stc-change .table .desc { font-weight: normal; color: #999; font-size: 11px; }
+.stc-content .stc-change .table .submits { text-align: right; }
+.stc-content .stc-change .table .textareas { font-weight: bold; color: #555; }
+.stc-content .stc-change .table .textareas textarea { width: 96%; height: 140px; margin-top: 10px; }

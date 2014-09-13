@@ -1,0 +1,24 @@
+<div class="stc-admin-main">
+	<div class="stc-menu">
+		<div class="btn-group">
+			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Меню <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a href="<?php echo STC_URL; ?>admin/new/" >Добавить страницу</a></li>
+				<li><a href="<?php echo STC_URL; ?>admin/settings/">Настройки</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<form method="post" action="<?php echo STC_URL; ?>admin/delete/">
+		<input type="hidden" name="<?php echo $stc_f_security; ?>" value="<?php echo $stc_f_set; ?>">
+		<div class="list-pages">
+			<div class="page-line stc-head">
+				<div class="stc-id">#</div>
+				<div class="stc-title">Название</div>
+				<div class="stc-action">Действие</div>
+			</div>
+			<?php echo $pages; ?>
+		</div>
+	</form>
+	<center><?php echo $pagination; ?></center>
+</div>
