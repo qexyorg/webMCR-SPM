@@ -79,7 +79,7 @@ class statics_pages{
 		// Filter returned vars [End]
 
 		// If you need destroy unused vars, remove comments
-		//unset($bd_names, $bd_users, $query, $ar, $data);
+		// unset($lvl, $bd_names, $bd_users, $query, $ar, $data);
 
 		include_once(STC_STYLE.'pages/page-full.html');
 
