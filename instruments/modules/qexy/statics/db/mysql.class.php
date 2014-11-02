@@ -1,6 +1,8 @@
 <?php
 /**
  * Static pages for WebMCR
+ *
+ * MySQLi class for using database
  * 
  * @author Qexy.org (admin@qexy.org)
  *
@@ -14,6 +16,13 @@ if (!defined('QEXY')){ exit("Hacking Attempt!"); }
 
 class statics_db{
 
+	private $row = false;
+	public $num = 0;
+
+	public function __construct(){
+		$this->db = getDB();
+	}
+
 	/**
 	 * Public Method MQ(@param)
 	 *
@@ -22,9 +31,14 @@ class statics_db{
 	 * @return resource or false(boolean)
 	 *
 	 */
-	public function MQ($query){
+	public function MQ($query, $num=0){
+
 		$_SESSION['stc_count_mq']++;
-		return BD($query);
+		$this->num = $num;
+
+		$this->row[$this->num] = $this->db->query($query);
+		
+		return $this->row[$this->num];
 	}
 
 
@@ -37,7 +51,7 @@ class statics_db{
 	 *
 	 */
 	public function MFA($query){
-		return mysql_fetch_array($query);
+		return mysql_fetch_array($this->row[$this->num]->getResult());
 	}
 
 
@@ -50,7 +64,7 @@ class statics_db{
 	 *
 	 */
 	public function MFAS($query){
-		return mysql_fetch_assoc($query);
+		return mysql_fetch_assoc($this->row[$this->num]->getResult());//mysqli_fetch_assoc($query);
 	}
 
 
@@ -62,8 +76,8 @@ class statics_db{
 	 * @return integer or false(boolean)
 	 *
 	 */
-	public function MNR($query){
-		return mysql_num_rows($query);
+	public function MNR($query=false){
+		return $this->row[$this->num]->rowCount();
 	}
 
 
@@ -87,6 +101,7 @@ class statics_db{
 	 *
 	 */
 	public function MRES($query){
+
 		return mysql_real_escape_string($query);
 	}
 
@@ -104,4 +119,16 @@ class statics_db{
 	}
 }
 
+/**
+ * Static pages for WebMCR
+ *
+ * MySQLi class for using database
+ * 
+ * @author Qexy.org (admin@qexy.org)
+ *
+ * @copyright Copyright (c) 2014 Qexy.org
+ *
+ * @version 1.0
+ *
+ */
 ?>
