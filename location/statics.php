@@ -62,7 +62,7 @@ require_once(STC_CLASS_PATH.'init.class.php'); $stc_init = new statics_init($use
 $stc_init->info_set();
 
 // Set active menu
-$menu->SetItemActive('moder');
+$menu->SetItemActive('statics');
 
 // Set default page
 $do = isset($_GET['do']) ? $_GET['do'] : '403';
