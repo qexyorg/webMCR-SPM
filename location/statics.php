@@ -43,7 +43,7 @@ if(isset($config['db_driver'])){
 		exit("Sorry, but this database driver not supported");
 	}
 }else{
-	$driver = 'mysql';
+	$driver = 'mysql.old';
 }
 
 // Load configuration
