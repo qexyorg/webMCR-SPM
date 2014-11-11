@@ -72,6 +72,7 @@ class statics_pages{
 			"TITLE" => $this->db->HSC($ar['title']),
 			"TEXT" => $ar['text_html'],
 			"DATA" => $data,
+			"OP" => $op,
 
 			"AUTHOR_ID" => intval($ar['uid_create']),
 			"UPDATER_ID" => intval($ar['uid_update']),
