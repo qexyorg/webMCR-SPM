@@ -1,12 +1,14 @@
 <?php
 /**
- * Control moder panel (CMP) for webmcr
+ * Static pages for WebMCR
+ *
+ * Pages class (plugin)
  * 
  * @author Qexy.org (admin@qexy.org)
  *
- * @copyright Copyright (c) 2014-2014 Qexy.org
+ * @copyright Copyright (c) 2014 Qexy.org
  *
- * @version 1.0
+ * @version 1.0.1
  *
  */
 
@@ -37,53 +39,51 @@ class statics_pages{
 	private function page_full($op){
 		ob_start();
 
-		$lvl = $this->user->lvl();
+		$lvl = $this->user->lvl;
 
-		$this->configs = $this->init->get_config();
+		$this->configs = $this->init->getMcrConfig();
 
 		$bd_names = $this->configs['bd_names'];
 		$bd_users = $this->configs['bd_users'];
 
-		$op = $this->db->MRES($op);
+		$op = $this->db->safesql($op);
 
-		$query = $this->db->MQ("SELECT	`s`.id, `s`.title, `s`.`data`, `s`.`text_html`, `s`.uid_create, `s`.uid_update, `s`.`access`,
+		$query = $this->db->query("SELECT	`s`.id, `s`.title, `s`.`data`, `s`.`text_html`, `s`.uid_create, `s`.uid_update, `s`.`access`,
 										`cr`.`{$bd_users['login']}` AS login_create,
 										`up`.`{$bd_users['login']}` AS login_update
-								FROM `qx_statics` AS `s`
-								LEFT JOIN `{$bd_names['users']}` AS `cr`
-									ON `cr`.`{$bd_users['id']}` = `s`.uid_create
-								LEFT JOIN `{$bd_names['users']}` AS `up`
-									ON `up`.`{$bd_users['id']}` = `s`.uid_create
-								WHERE `s`.`uniq`='$op'
-									AND `s`.`status`='1'");
+									FROM `qx_statics` AS `s`
+									LEFT JOIN `{$bd_names['users']}` AS `cr`
+										ON `cr`.`{$bd_users['id']}` = `s`.uid_create
+									LEFT JOIN `{$bd_names['users']}` AS `up`
+										ON `up`.`{$bd_users['id']}` = `s`.uid_create
+									WHERE `s`.`uniq`='$op'
+										AND `s`.`status`='1'");
 
-		if(!$query || $this->db->MNR($query)<=0){ $this->init->notify("Страница не найдена", "404/", 3); }
+		if(!$query || $this->db->num_rows($query)<=0){ $this->init->notify("Страница не найдена", "&do=404", "404", 3); }
 
-		$ar = $this->db->MFAS($query);
+		$ar = $this->db->get_row($query);
 
-		if($lvl < intval($ar['access'])){ $this->init->notify("Доступ запрещен!", "403/", 3); }
-		
-		// Filter returned vars [Start]
-		$id				= intval($ar['id']);
-		$title			= $this->db->HSC($ar['title']);
-		$text			= $ar['text_html'];
-		$data			= json_decode($ar['data'], true);
+		if($lvl < intval($ar['access'])){ $this->init->notify("Доступ запрещен!", "&do=403", "403", 3); }
 
-		$author_id		= intval($ar['uid_create']);
-		$updater_id		= intval($ar['uid_update']);
-		$author			= $this->db->HSC($ar['login_create']);
-		$updater		= $this->db->HSC($ar['login_update']);
+		$data = json_decode($ar['data'], true);
 
-		$created		= date("d.m.Y в H:i:s", intval($data['time_create']));
-		$updated		= date("d.m.Y в H:i:s", intval($data['time_update']));
-		// Filter returned vars [End]
+		$content = array(
+			"ID" => intval($ar['id']),
+			"TITLE" => $this->db->HSC($ar['title']),
+			"TEXT" => $ar['text_html'],
+			"DATA" => $data,
 
-		// If you need destroy unused vars, remove comments
-		// unset($lvl, $bd_names, $bd_users, $query, $ar, $data);
+			"AUTHOR_ID" => intval($ar['uid_create']),
+			"UPDATER_ID" => intval($ar['uid_update']),
+			"AUTHOR" => $this->db->HSC($ar['login_create']),
+			"UPDATER" => $this->db->HSC($ar['login_update']),
+			"CREATED" => date("d.m.Y в H:i:s", intval($data['time_create'])),
+			"UPDATED" => date("d.m.Y в H:i:s", intval($data['time_update'])),
+		);
 
-		include_once(STC_STYLE.'pages/page-full.html');
+		echo $this->init->sp("pages/page-full.html", $content);
 
-		$this->title	= $title;
+		$this->title	= $content['TITLE'];
 
 		return ob_get_clean();
 	}
@@ -93,23 +93,30 @@ class statics_pages{
 
 		$op = (isset($_GET['op'])) ? $_GET['op'] : '404';
 
-		$content		= $this->page_full($op); // Set content
-		$this->bc		= $this->init->get_bc($this->title, '', false, true, false); // Set breadcrumbs
+		echo $this->page_full($op);
 
-		echo $content;
+		$array = array(
+			"Главная" => BASE_URL,
+			$this->init->cfg['title'] => STC_URL,
+			$this->title => ""
+		);
+		
+		$this->bc		= $this->init->bc($array); // Set breadcrumbs
 
 		return ob_get_clean();
 	}
 }
 
 /**
- * Control moder panel (CMP) for webmcr
+ * Static pages for WebMCR
+ *
+ * Pages class (plugin)
  * 
  * @author Qexy.org (admin@qexy.org)
  *
- * @copyright Copyright (c) 2014-2014 Qexy.org
+ * @copyright Copyright (c) 2014 Qexy.org
  *
- * @version 1.0
+ * @version 1.0.1
  *
  */
 ?>
