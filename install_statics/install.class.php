@@ -47,6 +47,8 @@ class install_statics{
 
 	private function step_1(){
 		ob_start();
+		
+		if(!$this->cfg['install']){ $this->init->notify("Установка уже произведена", "", "Ошибка!", 3); }
 
 		$write_menu = $write_cfg = $write_configs = $check_install = '';
 
