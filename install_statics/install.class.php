@@ -35,7 +35,6 @@ class install_statics{
 		$this->db			= $init->db;
 		$this->init			= $init;
 		
-		if(!$this->cfg['install']){ $this->init->url = ''; $this->init->notify(); }
 		if($this->user->lvl < $this->cfg['lvl_admin']){ $this->init->url = ''; $this->init->notify(); }
 	}
 
