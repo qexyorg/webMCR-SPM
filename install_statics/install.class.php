@@ -34,8 +34,9 @@ class install_statics{
 		$this->user			= $init->user;
 		$this->db			= $init->db;
 		$this->init			= $init;
-
-		if($this->user->lvl < $this->cfg['lvl_admin']){ header('Location: '.BASE_URL); exit; }
+		
+		if(!$this->cfg['install']){ $this->init->url = ''; $this->init->notify(); }
+		if($this->user->lvl < $this->cfg['lvl_admin']){ $this->init->url = ''; $this->init->notify(); }
 	}
 
 	private function check_table(){
@@ -129,19 +130,21 @@ class install_statics{
 			if(!isset($_POST['submit'])){ $this->init->notify("Hacking Attempt!", "&do=install", "403", 3); }
 
 			require(MCR_ROOT."instruments/menu_items.php");
+			
+			if(!isset($menu_items[1]['statics'])){
+				$menu_items[1]['statics'] = array (
+				  'name' => 'Статические страницы',
+				  'url' => '?mode=statics&do=admin',
+				  'parent_id' => 'admin',
+				  'lvl' => 15,
+				  'permission' => -1,
+				  'active' => false,
+				  'inner_html' => '',
+				);
 
-			$menu_items[1]['statics'] = array (
-			  'name' => 'Статические страницы',
-			  'url' => '?mode=statics&do=admin',
-			  'parent_id' => 'admin',
-			  'lvl' => 15,
-			  'permission' => -1,
-			  'active' => false,
-			  'inner_html' => '',
-			);
-
-			if(!$this->saveMenu($menu_items)){ $this->init->notify("Ошибка переустановки #3", "&do=install", "Ошибка!", 3); }
-
+				if(!$this->saveMenu($menu_items)){ $this->init->notify("Ошибка переустановки #3", "&do=install", "Ошибка!", 3); }
+			}
+			
 			$_SESSION['install_step'] = "3";
 
 			$this->init->notify("", "&do=install&op=3", "", 2);
