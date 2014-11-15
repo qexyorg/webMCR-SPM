@@ -4,7 +4,7 @@ REQUIRED - https://github.com/qexyorg/webMCR-API
 
 1. Upload files from "upload" folder in your webMCR directory
 
-2. Go to http://yoursite.com/go/statics/
+2. Go to http://yoursite.com/?mode=statics
 
 -------------------------------------------------------------
 
