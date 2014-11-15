@@ -40,7 +40,8 @@ class install_statics{
 
 	private function check_table(){
 		$query = $this->db->query("SELECT COUNT(*) FROM `qx_statics`");
-		if(!$query){ return false; }
+		$ar = @$this->db->get_array($query);
+		if(!$query || !$ar){ return false; }
 
 		return true;
 	}
