@@ -147,6 +147,10 @@ class install_statics{
 				if(!$this->saveMenu($menu_items)){ $this->init->notify("Ошибка переустановки #3", "&do=install", "Ошибка!", 3); }
 			}
 			
+			$this->cfg['install'] = false;
+
+			if(!$this->init->savecfg($this->cfg, "configs/statics.cfg.php")){ $this->init->notify("Ошибка переустановки #4", "&do=install", 3); }
+			
 			$_SESSION['install_step'] = "finish";
 
 			$this->init->notify("", "&do=install&op=finish", "", 2);
