@@ -147,32 +147,12 @@ class install_statics{
 				if(!$this->saveMenu($menu_items)){ $this->init->notify("Ошибка переустановки #3", "&do=install", "Ошибка!", 3); }
 			}
 			
-			$_SESSION['install_step'] = "3";
-
-			$this->init->notify("", "&do=install&op=3", "", 2);
-		}
-
-		echo $this->init->sp(MCR_ROOT.'install_statics/styles/step-2.html', array(), true);
-
-		return ob_get_clean();
-	}
-
-	private function step_3(){
-		ob_start();
-
-		if($_SERVER['REQUEST_METHOD']=='POST'){
-			if(!isset($_POST['submit'])){ $this->init->notify("Hacking Attempt!", "&do=install", "403", 3); }
-
-			$this->cfg['install'] = false;
-
-			if(!$this->init->savecfg($this->cfg, "configs/statics.cfg.php")){ $this->init->notify("Ошибка переустановки #4", "&do=install", "Ошибка!", 3); }
-
 			$_SESSION['install_step'] = "finish";
 
 			$this->init->notify("", "&do=install&op=finish", "", 2);
 		}
-		
-		echo $this->init->sp(MCR_ROOT.'install_statics/styles/step-3.html', array(), true);
+
+		echo $this->init->sp(MCR_ROOT.'install_statics/styles/step-2.html', array(), true);
 
 		return ob_get_clean();
 	}
