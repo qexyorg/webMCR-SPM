@@ -24,7 +24,7 @@
 					<td class="inputs">
 						<select name="status">
 							<option value="1">Активна</option>
-							<option value="0" <?php echo $status; ?>>Не активна</option>
+							<option value="0" <?php echo $data['STATUS']; ?>>Не активна</option>
 						</select>
 					</td>
 				</tr>
@@ -39,7 +39,8 @@
 				<tr>
 					<td class="textareas" colspan="2">Текст страницы
 						<div class="desc">- Полный текст статической страницы. Можно использовать BB-коды</div>
-						<?php echo $data['BB_PANEL']; ?>
+						<?php echo $this->bb_panel(); ?>
+						<textarea rows="3" name="text_bb" class="bb-textarea" required><?php echo $data['TEXT_BB']; ?></textarea>
 					</td>
 				</tr>
 

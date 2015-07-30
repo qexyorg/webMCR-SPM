@@ -1,14 +1,14 @@
 <?php
 /**
- * Static pages for WebMCR
+ * Static pages module for WebMCR
  *
- * Installation class
+ * Install class
  * 
  * @author Qexy.org (admin@qexy.org)
  *
- * @copyright Copyright (c) 2014 Qexy.org
+ * @copyright Copyright (c) 2015 Qexy.org
  *
- * @version 1.0.1
+ * @version 1.2.0
  *
  */
 
@@ -17,41 +17,33 @@ if (!defined('QEXY')){ exit("Hacking Attempt!"); }
 
 $content_js .= '<link href="'.BASE_URL.'install_statics/styles/css/install.css" rel="stylesheet">';
 
-class install_statics{
+class module{
 	// Set default variables
 	private $cfg			= array();
 	private $user			= false;
 	private $db				= false;
-	private $init			= false;
+	private $api			= false;
 	private $configs		= array();
 	public	$in_header		= '';
 	public	$title			= '';
 
 	// Set counstructor values
-	public function __construct($init){
+	public function __construct($api){
 
-		$this->cfg			= $init->cfg;
-		$this->user			= $init->user;
-		$this->db			= $init->db;
-		$this->init			= $init;
+		$this->cfg			= $api->cfg;
+		$this->user			= $api->user;
+		$this->db			= $api->db;
+		$this->api			= $api;
 		
-		if($this->user->lvl < $this->cfg['lvl_admin']){ $this->init->url = ''; $this->init->notify(); }
-	}
-
-	private function check_table(){
-		$query = $this->db->query("SELECT COUNT(*) FROM `qx_statics`");
-		$ar = @$this->db->get_array($query);
-		if(!$query || !$ar){ return false; }
-
-		return true;
+		if($this->user->lvl < $this->cfg['lvl_admin']){ $this->api->url = ''; $this->api->notify(); }
 	}
 
 	private function step_1(){
-		ob_start();
-		
-		if(!$this->cfg['install']){ $this->init->notify("Установка уже произведена", "", "Ошибка!", 3); }
 
-		$write_menu = $write_cfg = $write_configs = $check_install = '';
+		if(!$this->cfg['install']){ $this->api->notify("Установка уже произведена", "", "Ошибка!", 3); }
+		if(isset($_SESSION['step_2'])){ $this->api->notify("", "&do=install&op=2", "", 3); }
+
+		$write_menu = $write_cfg = $write_configs = '';
 
 		if(!is_writable(MCR_ROOT.'instruments/menu_items.php')){
 			$write_menu = '<div class="alert alert-error"><b>Внимание!</b> Выставите права 777 на файл <b>instruments/menu_items.php</b></div>';
@@ -65,21 +57,20 @@ class install_statics{
 			$write_cfg = '<div class="alert alert-error"><b>Внимание!</b> Выставите права 777 на файл <b>configs/statics.cfg.php</b></div>';
 		}
 
-		if($this->check_table()){
-			$check_install = '<div class="alert"><b>Внимание!</b> Вы уже ранее устанавливали данный модуль. Данная установка будет произведена поверх старого модуля. Если хотите полностью переустановить предыдущий модуль, выберите пункт "Переустановить".</div>';
-		}
-
 		if($_SERVER['REQUEST_METHOD']=='POST'){
-			if(!isset($_POST['submit'])){ $this->init->notify("Hacking Attempt!", "&do=install", "403", 3); }
+			if(!isset($_POST['submit'])){ $this->api->notify("Hacking Attempt!", "&do=install", "403", 3); }
 
-			if(!empty($write_menu) || !empty($write_cfg) || !empty($write_configs)){ $this->init->notify("Требуется выставить необходимые права на запись", "&do=install", "Ошибка!", 3); }
+			if(!empty($write_menu) || !empty($write_cfg) || !empty($write_configs)){ $this->api->notify("Требуется выставить необходимые права на запись", "&do=install", "Ошибка!", 3); }
 
-			if(isset($_POST['reinstall']) && $_POST['reinstall']=='true'){
-				$drop = $this->db->query("DROP TABLE IF EXISTS `qx_statics`");
-				if(!$drop){ $this->init->notify("Ошибка переустановки #1", "&do=install", "Ошибка!", 3); }
-			}
+			$this->cfg['title']			= $this->db->HSC(strip_tags(@$_POST['title']));
+			$this->cfg['rop_pages']		= (intval(@$_POST['rop_pages'])<=0) ? 1 : intval(@$_POST['rop_pages']);
+			$this->cfg['lvl_access']	= intval(@$_POST['lvl_access']);
+			$this->cfg['lvl_admin']		= intval(@$_POST['lvl_admin']);
 
-			$sql = "CREATE TABLE IF NOT EXISTS `qx_statics` (
+			// Check save config
+			if(!$this->api->savecfg($this->cfg, "configs/statics.cfg.php")){ $this->api->notify("Ошибка сохранения настроек", "&do=install", "Ошибка!", 3); }
+
+			$create = $this->db->query("CREATE TABLE IF NOT EXISTS `qx_statics` (
 					  `id` int(10) NOT NULL AUTO_INCREMENT,
 					  `title` varchar(32) NOT NULL,
 					  `uniq` varchar(32) CHARACTER SET latin1 NOT NULL,
@@ -92,32 +83,27 @@ class install_statics{
 					  `data` text CHARACTER SET latin1 NOT NULL,
 					  PRIMARY KEY (`id`),
 					  UNIQUE KEY `uniq` (`uniq`)
-					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
 
-			$query = $this->db->query($sql);
+			if(!$create){ $this->api->notify("Ошибка установки", "&do=install", "Ошибка!", 3); }
 
-			if(!$query){ $this->init->notify("Ошибка переустановки #2", "&do=install", "Ошибка!", 3); }
+			$_SESSION['step_2'] = true;
 
-			$_SESSION['install_step'] = "2";
-
-			$this->init->notify("", "&do=install&op=2", "", 2);
+			$this->api->notify("Шаг 2", "&do=install&op=2", "Продолжение установки", 2);
 		}
 
 		$content = array(
 			"WRITE_MENU" => $write_menu,
 			"WRITE_CFG" => $write_cfg,
 			"WRITE_CONFIGS" => $write_configs,
-			"CHECK_INSTALL" => $check_install
 		);
 
-		echo $this->init->sp(MCR_ROOT.'install_statics/styles/step-1.html', $content, true);
-
-		return ob_get_clean();
+		return $this->api->sp(MCR_ROOT.'install_statics/styles/step-1.html', $content, true);
 	}
 
 	private function saveMenu($menu) {
 	
-		$txt  = "<?php if (!defined('MCR')) exit;".PHP_EOL;
+		$txt	= "<?php if (!defined('MCR')) exit;".PHP_EOL;
 		$txt .= '$menu_items = '.var_export($menu, true).';'.PHP_EOL;
 
 		$result = file_put_contents(MCR_ROOT."instruments/menu_items.php", $txt);
@@ -126,14 +112,16 @@ class install_statics{
 	}
 
 	private function step_2(){
-		ob_start();
+
+		if(!isset($_SESSION['step_2'])){ $this->api->notify("", "&do=install", "", 3); }
+		if(isset($_SESSION['step_3'])){ $this->api->notify("", "&do=install&op=3", "", 3); }
 
 		if($_SERVER['REQUEST_METHOD']=='POST'){
-			if(!isset($_POST['submit'])){ $this->init->notify("Hacking Attempt!", "&do=install", "403", 3); }
+			if(!isset($_POST['submit'])){ $this->api->notify("Hacking Attempt!", "&do=install&op=2", "403", 3); }
 
 			require(MCR_ROOT."instruments/menu_items.php");
-			
-			if(!isset($menu_items[1]['statics'])){
+
+			if(intval(@$_POST['menu'])==1 && !isset($menu_items[0]['statics'])){
 				$menu_items[1]['statics'] = array (
 				  'name' => 'Статические страницы',
 				  'url' => '?mode=statics&do=admin',
@@ -143,113 +131,121 @@ class install_statics{
 				  'active' => false,
 				  'inner_html' => '',
 				);
-
-				if(!$this->saveMenu($menu_items)){ $this->init->notify("Ошибка переустановки #3", "&do=install", "Ошибка!", 3); }
 			}
-			
-			$this->cfg['install'] = false;
 
-			if(!$this->init->savecfg($this->cfg, "configs/statics.cfg.php")){ $this->init->notify("Ошибка переустановки #4", "&do=install", 3); }
-			
-			$_SESSION['install_step'] = "finish";
+			if(!$this->saveMenu($menu_items)){ $this->api->notify("Ошибка установки", "&do=install&op=2", "Ошибка!", 3); }
 
-			$this->init->notify("", "&do=install&op=finish", "", 2);
+			$_SESSION['step_3'] = true;
+
+			$this->api->notify("", "&do=install&op=3", "", 2);
 		}
 
-		echo $this->init->sp(MCR_ROOT.'install_statics/styles/step-2.html', array(), true);
+		return $this->api->sp(MCR_ROOT.'install_statics/styles/step-2.html', array(), true);
+	}
 
-		return ob_get_clean();
+	private function step_3(){
+
+		if(!isset($_SESSION['step_3'])){ $this->api->notify("", "&do=install&op=2", "", 3); }
+		if(isset($_SESSION['step_finish'])){ $this->api->notify("", "&do=install&op=finish", "", 3); }
+
+		if($_SERVER['REQUEST_METHOD']=='POST'){
+			if(!isset($_POST['submit'])){ $this->api->notify("Hacking Attempt!", "&do=install", "403", 3); }
+
+			$this->cfg['install'] = false;
+
+			if(!$this->api->savecfg($this->cfg, "configs/statics.cfg.php")){ $this->api->notify("Ошибка установки", "&do=install", "Ошибка!", 3); }
+
+			$_SESSION['step_finish'] = true;
+
+			$this->api->notify("", "&do=install&op=finish", "", 2);
+		}
+
+		return $this->api->sp(MCR_ROOT.'install_statics/styles/step-3.html', array(), true);
 	}
 
 	private function finish(){
-		ob_start();
-	
-		$_SESSION['install_finished'] = true;
 
-		unset($_SESSION['install_step']);
-		
-		echo $this->init->sp(MCR_ROOT.'install_statics/styles/finish.html', array(), true);
+		if(!isset($_SESSION['step_finish'])){ $this->api->notify("", "&do=install&op=3", "", 3); }
 
-		return ob_get_clean();
+		$content = $this->api->sp(MCR_ROOT.'install_statics/styles/finish.html', array(), true);
+
+		unset($_SESSION['step_finish'], $_SESSION['step_3'], $_SESSION['step_2']);
+
+		return $content;
 	}
 
 	public function _list(){
-		ob_start();
 
 		$op = (isset($_GET['op'])) ? $_GET['op'] : 'main';
 
-		/**
-		 * Select needed page
-		 */
-
-		$step = (!isset($_SESSION['install_step'])) ? "1" : $_SESSION['install_step'];
-
-		switch($step){
+		switch($op){
 			case "2":
 				$this->title	= "Установка — Шаг 2"; // Set page title (In tag <title></title>)
-				$content		= $this->step_2(); // Set content
 				$array = array(
 					"Главная" => BASE_URL,
-					$this->init->cfg['title'] => STC_URL,
-					"Установка" => STC_URL."&do=install",
+					$this->cfg['title'] => MOD_URL,
+					"Установка" => MOD_URL."&do=install",
 					"Шаг 2" => ""
 				);
-				$this->bc		= $this->init->bc($array);
+				$this->bc		= $this->api->bc($array);
+
+				return $this->step_2(); // Set content
 			break;
 
 			case "3":
 				$this->title	= "Установка — Шаг 3"; // Set page title (In tag <title></title>)
-				$content		= $this->step_3(); // Set content
 				$array = array(
 					"Главная" => BASE_URL,
-					$this->init->cfg['title'] => STC_URL,
-					"Установка" => STC_URL."&do=install",
+					$this->cfg['title'] => MOD_URL,
+					"Установка" => MOD_URL."&do=install",
 					"Шаг 3" => ""
 				);
-				$this->bc		= $this->init->bc($array);
+				$this->bc		= $this->api->bc($array);
+
+				return $this->step_3(); // Set content
 			break;
 
 			case "finish":
 				$this->title	= "Установка — Конец установки"; // Set page title (In tag <title></title>)
-				$content		= $this->finish(); // Set content
 				$array = array(
 					"Главная" => BASE_URL,
-					$this->init->cfg['title'] => STC_URL,
-					"Установка" => STC_URL."&do=install",
+					$this->cfg['title'] => MOD_URL,
+					"Установка" => MOD_URL."&do=install",
 					"Конец установки" => ""
 				);
-				$this->bc		= $this->init->bc($array);
+				$this->bc		= $this->api->bc($array);
+
+				return $this->finish(); // Set content
 			break;
 
 			default:
-				$this->title	= "Установка — Шаг 1";
-				$content		= $this->step_1();
 				$array = array(
 					"Главная" => BASE_URL,
-					$this->init->cfg['title'] => STC_URL,
-					"Установка" => STC_URL."&do=install",
+					$this->cfg['title'] => MOD_URL,
+					"Установка" => MOD_URL."&do=install",
 					"Шаг 1" => ""
 				);
-				$this->bc		= $this->init->bc($array);
+				$this->bc		= $this->api->bc($array);
+
+				$this->title	= "Установка — Шаг 1";
+				return $this->step_1();
 			break;
 		}
 
-		echo $content;
-
-		return ob_get_clean();
+		return '';
 	}
 }
 
 /**
- * Static pages for WebMCR
+ * Static pages module for WebMCR
  *
- * Installation class
+ * Install class
  * 
  * @author Qexy.org (admin@qexy.org)
  *
- * @copyright Copyright (c) 2014 Qexy.org
+ * @copyright Copyright (c) 2015 Qexy.org
  *
- * @version 1.0.1
+ * @version 1.2.0
  *
  */
 ?>

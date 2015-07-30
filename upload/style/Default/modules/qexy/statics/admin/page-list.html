@@ -2,14 +2,14 @@
 	<div class="stc-menu">
 		<div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Меню <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="<?php echo STC_URL; ?>&do=admin&op=new" >Добавить страницу</a></li>
-				<li><a href="<?php echo STC_URL; ?>&do=admin&op=settings">Настройки</a></li>
+			<ul class="dropdown-menu pull-right">
+				<li><a href="<?php echo MOD_URL; ?>&do=admin&op=new" >Добавить страницу</a></li>
+				<li><a href="<?php echo MOD_URL; ?>&do=admin&op=settings">Настройки</a></li>
 			</ul>
 		</div>
 	</div>
 
-	<form method="post" action="<?php echo STC_URL; ?>&do=admin&op=delete">
+	<form method="post" action="<?php echo MOD_URL; ?>&do=admin&op=delete">
 		<input type="hidden" name="<?php echo $data['STC_F_SECURITY']; ?>" value="<?php echo $data['STC_F_SET']; ?>">
 		<div class="list-pages">
 			<div class="page-line stc-head">

@@ -8,47 +8,44 @@
  *
  * @copyright Copyright (c) 2014 Qexy.org
  *
- * @version 1.0.1
+ * @version 1.2.0
  *
  */
 
 // Check Qexy constant
 if (!defined('QEXY')){ exit("Hacking Attempt!"); }
 
-class statics_pages{
+class module{
 	// Set default variables
 	private $cfg			= array();
 	private $user			= false;
 	private $db				= false;
-	private $init			= false;
+	private $api			= false;
 	private $configs		= array();
 	public	$in_header		= '';
 	public	$title			= '';
 
 	// Set constructor vars
-	public function __construct($init){
+	public function __construct($api){
 
-		$this->cfg			= $init->cfg;
-		$this->user			= $init->user;
-		$this->db			= $init->db;
-		$this->init			= $init;
+		$this->cfg			= $api->cfg;
+		$this->user			= $api->user;
+		$this->db			= $api->db;
+		$this->api			= $api;
 
 	}
 
 	// Get full page
 	private function page_full($op){
-		ob_start();
 
-		$lvl = $this->user->lvl;
-
-		$this->configs = $this->init->getMcrConfig();
+		$this->configs = $this->api->getMcrConfig();
 
 		$bd_names = $this->configs['bd_names'];
 		$bd_users = $this->configs['bd_users'];
 
 		$op = $this->db->safesql($op);
 
-		$query = $this->db->query("SELECT	`s`.id, `s`.title, `s`.`data`, `s`.`text_html`, `s`.uid_create, `s`.uid_update, `s`.`access`,
+		$query = $this->db->query("SELECT `s`.id, `s`.title, `s`.`data`, `s`.`text_html`, `s`.uid_create, `s`.uid_update, `s`.`access`,
 										`cr`.`{$bd_users['login']}` AS login_create,
 										`up`.`{$bd_users['login']}` AS login_update
 									FROM `qx_statics` AS `s`
@@ -59,11 +56,11 @@ class statics_pages{
 									WHERE `s`.`uniq`='$op'
 										AND `s`.`status`='1'");
 
-		if(!$query || $this->db->num_rows($query)<=0){ $this->init->notify("Страница не найдена", "&do=404", "404", 3); }
+		if(!$query || $this->db->num_rows($query)<=0){ $this->api->notify("Страница не найдена", "&do=404", "404", 3); }
 
 		$ar = $this->db->get_row($query);
 
-		if($lvl < intval($ar['access'])){ $this->init->notify("Доступ запрещен!", "&do=403", "403", 3); }
+		if($this->user->lvl < intval($ar['access'])){ $this->api->notify("Доступ запрещен!", "&do=403", "403", 3); }
 
 		$data = json_decode($ar['data'], true);
 
@@ -82,29 +79,26 @@ class statics_pages{
 			"UPDATED" => date("d.m.Y в H:i:s", intval($data['time_update'])),
 		);
 
-		echo $this->init->sp("pages/page-full.html", $content);
-
 		$this->title	= $content['TITLE'];
 
-		return ob_get_clean();
+		return $this->api->sp("pages/page-full.html", $content);
 	}
 
 	public function _list(){
-		ob_start();
 
 		$op = (isset($_GET['op'])) ? $_GET['op'] : '404';
 
-		echo $this->page_full($op);
+		$content = $this->page_full($op);
 
 		$array = array(
 			"Главная" => BASE_URL,
-			$this->init->cfg['title'] => STC_URL,
+			$this->api->cfg['title'] => MOD_URL,
 			$this->title => ""
 		);
 		
-		$this->bc		= $this->init->bc($array); // Set breadcrumbs
+		$this->bc = $this->api->bc($array); // Set breadcrumbs
 
-		return ob_get_clean();
+		return $content;
 	}
 }
 
@@ -117,7 +111,7 @@ class statics_pages{
  *
  * @copyright Copyright (c) 2014 Qexy.org
  *
- * @version 1.0.1
+ * @version 1.2.0
  *
  */
 ?>
