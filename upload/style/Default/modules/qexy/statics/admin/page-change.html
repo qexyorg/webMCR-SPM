@@ -7,14 +7,14 @@
 					<td class="name">Название
 						<div class="desc">- Название модуля статических страниц (Отображается в заголовке страницы и хлебных крошках)</div>
 					</td>
-					<td class="inputs"><input type="text" name="title" placeholder="Название" value="<?php echo $title; ?>" required></td>
+					<td class="inputs"><input type="text" name="title" placeholder="Название" value="<?php echo $data['TITLE']; ?>" required></td>
 				</tr>
 
 				<tr>
 					<td class="name">Идентификатор
-						<div class="desc">- Идентификатор, по которому будет доступна страница (Пример: <?php echo MCR_URL_ROOT; ?>/go/statics/page/ВАШ_ИДЕНТИФИКАТОР/)</div>
+						<div class="desc">- Идентификатор, по которому будет доступна страница (Пример: <?php echo MCR_URL_ROOT; ?>/?mode=statics&do=page&op=ВАШ_ИДЕНТИФИКАТОР)</div>
 					</td>
-					<td class="inputs"><input type="text" name="uniq" placeholder="Идентификатор" pattern="^(\w+)$" value="<?php echo $uniq; ?>" required></td>
+					<td class="inputs"><input type="text" name="uniq" placeholder="Идентификатор" pattern="^(\w+)$" value="<?php echo $data['UNIQ']; ?>" required></td>
 				</tr>
 
 				<tr>
@@ -33,37 +33,20 @@
 					<td class="name">Уровень доступа к странице
 						<div class="desc">- Минимальный уровень доступа к статической странице</div>
 					</td>
-					<td class="inputs"><input type="text" name="access" placeholder="Число" value="<?php echo $access; ?>" required></td>
+					<td class="inputs"><input type="text" name="access" placeholder="Число" value="<?php echo $data['ACCESS']; ?>" required></td>
 				</tr>
 
 				<tr>
 					<td class="textareas" colspan="2">Текст страницы
 						<div class="desc">- Полный текст статической страницы. Можно использовать BB-коды</div>
-						<div class="btn-toolbar">
-							<div class="btn-group">
-								<a href="#" rel="tooltip" class="btn" title="Жирный" onClick="javascript:bb(bbc, '[b]', '[/b]'); return false;"><b>B</b></a>
-								<a href="#" rel="tooltip" class="btn" title="Курсив" onClick="javascript:bb(bbc, '[i]', '[/i]'); return false;"><i>i</i></a>
-								<a href="#" rel="tooltip" class="btn" title="Зачеркнутый" onClick="javascript:bb(bbc, '[s]', '[/s]'); return false;"><s>S</s></a>
-								<a href="#" rel="tooltip" class="btn" title="Подчеркнутый" onClick="javascript:bb(bbc, '[u]', '[/u]'); return false;"><u>u</u></a>
-								<a href="#" rel="tooltip" class="btn" title="Выравнивание по левому краю" onClick="javascript:bb(bbc, '[left]', '[/left]'); return false;"><i class="icon-align-left"></i></a>
-								<a href="#" rel="tooltip" class="btn" title="Выравнивание по центру" onClick="javascript:bb(bbc, '[center]', '[/center]'); return false;"><i class="icon-align-center"></i></a>
-								<a href="#" rel="tooltip" class="btn" title="Выравнивание по правому краю" onClick="javascript:bb(bbc, '[right]', '[/right]'); return false;"><i class="icon-align-right"></i></a>
-								<a href="#" rel="tooltip" class="btn" title="Код" onClick="javascript:bb(bbc, '[code]', '[/code]'); return false;"><i class="icon-qrcode"></i></a>
-								<a href="#" rel="tooltip" class="btn" title="Ссылка" onClick="javascript:bb(bbc, '[url=&quot;&quot;]', '[/url]'); return false;"><i class="icon-globe"></i></a>
-								<a href="#" rel="tooltip" class="btn" title="Размер шрифта" onClick="javascript:bb(bbc, '[size=&quot;&quot;]', '[/size]'); return false;"><i class="icon-text-height"></i></a>
-								<a href="#" rel="tooltip" class="btn" title="Изображение" onClick="javascript:bb(bbc, '[img]', '[/img]'); return false;"><i class="icon-picture"></i></a>
-								<a href="#" rel="tooltip" class="btn" title="Цвет текста" onClick="javascript:bb(bbc, '[color=&quot;&quot;]', '[/color]'); return false;"><i class="icon-tint"></i></a>
-								<a href="#" rel="tooltip" class="btn"  title="Цитата" onClick="javascript:bb(bbc, '[quote]', '[/quote]'); return false;"><i class="icon-comment"></i></a>
-							</div>
-						</div>
-						<textarea name="text_bb" id="bbc" placeholder="Текст" required><?php echo $text_bb; ?></textarea>
+						<?php echo $data['BB_PANEL']; ?>
 					</td>
 				</tr>
 
 				<tr>
 					<td class="submits" colspan="2">
-						<input type="hidden" name="<?php echo $stc_f_security; ?>" value="<?php echo $stc_f_set; ?>">
-						<input type="submit" class="btn btn-primary" name="submit" value="<?php echo $submit; ?>">
+						<input type="hidden" name="<?php echo $data['STC_F_SECURITY']; ?>" value="<?php echo $data['STC_F_SET']; ?>">
+						<input type="submit" class="btn btn-primary" name="submit" value="<?php echo $data['SUBMIT']; ?>">
 					</td>
 				</tr>
 			</tbody>

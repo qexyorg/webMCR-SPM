@@ -1,10 +1,10 @@
 <div class="page-line">
-	<div class="stc-id">#<?php echo $id; ?></div>
-	<div class="stc-title"><a href="<?php echo STC_URL."page/$uniq/"; ?>" target="_blank" rel="tooltip" title="Откроется в новой вкладке"><?php echo $title; ?></a></div>
+	<div class="stc-id">#<?php echo $data['ID']; ?></div>
+	<div class="stc-title"><a href="<?php echo STC_URL."&do=page&op=".$data['UNIQ']; ?>" target="_blank" rel="tooltip" title="Откроется в новой вкладке"><?php echo $data['TITLE']; ?></a></div>
 	<div class="stc-action">
 		<div class="btn-group">
-			<a class="btn btn-mini" href="<?php echo STC_URL; ?>admin/edit/<?php echo $id; ?>/"><i class="icon-pencil"></i></a>
-			<button class="btn btn-mini del-accept" name="delete" value="<?php echo $id; ?>"><i class="icon-remove"></i></button>
+			<a class="btn btn-mini" href="<?php echo STC_URL; ?>&do=admin&op=edit&act=<?php echo $data['ID']; ?>"><i class="icon-pencil"></i></a>
+			<button class="btn btn-mini del-accept" name="delete" value="<?php echo $data['ID']; ?>"><i class="icon-remove"></i></button>
 		</div>
 	</div>
 </div>

@@ -1,7 +1,7 @@
 <div class="stc-page-full">
-	<div class="title"><?php echo $title; ?></div>
+	<div class="title"><?php echo $data['TITLE']; ?></div>
 	<div class="block-line"></div>
-	<div class="text"><?php echo $text; ?></div>
+	<div class="text"><?php echo $data['TEXT']; ?></div>
 	<div class="block-line"></div>
-	<div class="foot">Последнее обновление: <?php echo $updated; ?> (<a href="#" onclick="LoadProfile('customp',<?php echo $updater_id; ?>); return false"><?php echo $updater; ?></a>)</div>
+	<div class="foot">Последнее обновление: <?php echo $data['UPDATED']; ?> (<a href="#" onclick="LoadProfile('customp',<?php echo $data['UPDATER_ID']; ?>); return false"><?php echo $data['UPDATER']; ?></a>)</div>
 </div>

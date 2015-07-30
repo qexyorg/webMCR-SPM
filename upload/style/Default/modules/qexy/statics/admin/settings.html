@@ -7,33 +7,33 @@
 					<td class="name">Название
 						<div class="desc">- Название модуля статических страниц (Отображается в заголовке страницы и хлебных крошках)</div>
 					</td>
-					<td class="inputs"><input type="text" name="title" placeholder="Название" value="<?php echo $title; ?>" required></td>
+					<td class="inputs"><input type="text" name="title" placeholder="Название" value="<?php echo $data['TITLE']; ?>" required></td>
 				</tr>
 
 				<tr>
 					<td class="name">Результатов на страницу
 						<div class="desc">- Кол-во результатов на странице панели управления статическими страницами</div>
 					</td>
-					<td class="inputs"><input type="text" name="rop_pages" placeholder="Число" value="<?php echo $rop_pages; ?>" pattern="^(\d+)$" required></td>
+					<td class="inputs"><input type="text" name="rop_pages" placeholder="Число" value="<?php echo $data['ROP_PAGES']; ?>" pattern="^(\d+)$" required></td>
 				</tr>
 
 				<tr>
 					<td class="name">Уровень доступа к статическим страница
 						<div class="desc">- Минимальный уровень доступа к статическим страницам</div>
 					</td>
-					<td class="inputs"><input type="text" name="lvl_access" placeholder="Число" value="<?php echo $lvl_access; ?>" required></td>
+					<td class="inputs"><input type="text" name="lvl_access" placeholder="Число" value="<?php echo $data['LVL_ACCESS']; ?>" required></td>
 				</tr>
 
 				<tr>
 					<td class="name">Уровень доступа к панели управления
 						<div class="desc">- Минимальный уровень доступа к панели управления статическими страницами</div>
 					</td>
-					<td class="inputs"><input type="text" name="lvl_admin" placeholder="Число" value="<?php echo $lvl_admin; ?>" required></td>
+					<td class="inputs"><input type="text" name="lvl_admin" placeholder="Число" value="<?php echo $data['LVL_ADMIN']; ?>" required></td>
 				</tr>
 
 				<tr>
 					<td class="submits" colspan="2">
-						<input type="hidden" name="<?php echo $stc_f_security; ?>" value="<?php echo $stc_f_set; ?>">
+						<input type="hidden" name="<?php echo $data['STC_F_SECURITY']; ?>" value="<?php echo $data['STC_F_SET']; ?>">
 						<input type="submit" class="btn btn-primary" name="submit" value="Сохранить">
 					</td>
 				</tr>

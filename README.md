@@ -1,15 +1,33 @@
 Static Pages Module for webMCR
 
+REQUIRED - https://github.com/qexyorg/webMCR-API
+
 1. Upload files from "upload" folder in your webMCR directory
 
-2. Open file .htaccess add strings:
-RewriteRule ^go/statics/(\w+)/?$ index.php?mode=statics&do=$1 [L,NE]
-RewriteRule ^go/statics/(\w+)/(\w+)/?$ index.php?mode=statics&do=$1&op=$2 [L,NE]
-RewriteRule ^go/statics/(\w+)/(\w+)/(\d+)/?$ index.php?mode=statics&do=$1&op=$2&act=$3 [L,NE]
-RewriteRule ^go/statics/(\w+)/page-(\d+)/?$ index.php?mode=statics&do=$1&pid=$2 [L,NE]
+2. Go to http://yoursite.com/?mode=statics
 
-After:
+-------------------------------------------------------------
 
-RewriteRule ^go/([^/]+)/?$ index.php?mode=$1 [L,NE]
+Следующие переменные доступны в файле "page-full.html"
 
-3. Go to http://yoursite.com/go/statics/
+$data['ID'] - Числовой идентификатор страницы
+
+$data['OP'] - Строковый идентификатор страницы
+
+$data['TITLE'] - Название страницы
+
+$data['TEXT'] - Текст страницы
+
+$data['AUTHOR_ID'] - Идентификатор создателя страницы
+
+$data['UPDATER_ID'] - Идентификатор последнего обновляющего страницы
+
+$data['AUTHOR'] - Логин создателя страницы
+
+$data['UPDATER'] - Логин обновляющего страницы
+
+$data['CREATED'] - Дата создания страницы
+
+$data['UPDATED'] - Дата обновления страницы
+
+$data['DATA'] - JSON Содержимое обновляемой информации
