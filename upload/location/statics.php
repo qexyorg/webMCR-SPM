@@ -92,7 +92,7 @@ switch($do){
 
 	// Load 403 page (static)
 	case '403':
-		$stc_content	= $api->sp("404.html");
+		$stc_content	= $api->sp("403.html");
 		$stc_title		= "Доступ запрещен";
 		$stc_bc			= $api->bc(array( "Главная" => BASE_URL, $cfg['title'] => MOD_URL, "Доступ запрещен" => ""));
 	break;
